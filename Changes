@@ -1,25 +1,5 @@
-Revision history for Sub::Spec::GetArgs::Array
+Revision history for Sub::Spec::ConvertArgs::Array
 
-0.04     2011-08-31
-
-         No functional changes. Updated because _parse_schema() is moved from
-         Sub::Spec::Utils to Data::Sah::Util.
-
-
-0.03     2011-08-25
-
-         No functional changes. Update to Sub::Spec 0.15 (attr_hashes ->
-         clause_sets).
-
-
-0.02     2011-08-03
-
-         [ENHANCEMENTS]
-
-         - For string arg with arg_greedy=1, returned joined elements (with ' ')
-           instead of an arrayref, for convenience.
-
-
-0.01     2011-07-28
+0.01     2011-09-22
 
          First release.

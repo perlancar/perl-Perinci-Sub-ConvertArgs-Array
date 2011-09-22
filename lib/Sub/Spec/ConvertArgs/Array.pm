@@ -60,41 +60,30 @@ sub convert_args_to_array {
         $args_spec = { map { $_ => _parse_schema($args_spec->{$_}) }
                            keys %$args_spec };
     }
-    my $allow_extra_elems = $input_args{allow_extra_elems} // 0;
     return [400, "Please specify spec"] if !$sub_spec && !$args_spec;
-    #$log->tracef("-> get_args_from_array(), array=%s", $array);
+    #$log->tracef("-> convert_args_to_array(), args=%s", $args);
 
-    my @array = @{$input_args{array}};
-    my $args = {};
+    my @array;
 
-    for my $i (reverse 0..$#array) {
-        #$log->tracef("i=$i");
-        while (my ($name, $schema) = each %$args_spec) {
-            my $schema = $args_spec->{$name};
-            my $ah0 = $schema->{clause_sets}[0];
-            my $o = $ah0->{arg_pos};
-            if (defined($o) && $o == $i) {
-                if ($ah0->{arg_greedy}) {
-                    my $type = $schema->{type};
-                    my @elems = splice(@array, $i);
-                    if ($type eq 'array') {
-                        $args->{$name} = \@elems;
-                    } else {
-                        $args->{$name} = join " ", @elems;
-                    }
-                    #$log->tracef("assign %s to arg->{$name}", $args->{$name});
-                } else {
-                    $args->{$name} = splice(@array, $i, 1);
-                    #$log->tracef("assign %s to arg->{$name}", $args->{$name});
-                }
+    while (my ($k, $v) = each %$args) {
+        my $as = $args_spec->{$k};
+        return [412, "Argument $k: No spec"] unless $as;
+        my $ac = $as->{clause_sets}[0];
+        my $pos = $ac->{arg_pos};
+        return [412, "Argument $k: Spec doesn't specify arg_pos"]
+            unless defined $pos;
+        if ($ac->{arg_greedy}) {
+            $v = [$v] if ref($v) ne 'ARRAY';
+            # splice can't work if $pos is beyond array's length
+            for (@array .. $pos-1) {
+                $array[$_] = undef;
             }
+            splice @array, $pos, 0, @$v;
+        } else {
+            $array[$pos] = $v;
         }
     }
-
-    return [400, "There are extra, unassigned elements in array: [".
-                join(", ", @array)."]"] if @array && !$allow_extra_elems;
-
-    [200, "OK", $args];
+    [200, "OK", \@array];
 }
 
 1;

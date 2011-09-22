@@ -6,7 +6,7 @@ use warnings;
 use Log::Any '$log';
 use Test::More 0.96;
 
-use Sub::Spec::GetArgs::Array qw(get_args_from_array);
+use Sub::Spec::ConvertArgs::Array qw(convert_args_to_array);
 
 my $spec;
 
@@ -15,20 +15,15 @@ $spec = {
         arg1 => ['str*' => {}],
     },
 };
-test_getargs(
-    name=>'no arg -> ok',
-    spec=>$spec, array=>[],
-    status=>200, args=>{},
-);
-test_getargs(
-    name=>'extra arg -> 400',
-    spec=>$spec, array=>[1],
-    status=>400
-);
-test_getargs(
-    name=>'allow_extra_elems=1',
-    spec=>$spec, array=>[1], allow_extra_elems=>1,
+test_convertargs(
+    name=>'empty -> ok',
+    spec=>$spec, args=>{},
     status=>200, array=>[],
+);
+test_convertargs(
+    name=>'no spec -> error',
+    spec=>$spec, args=>{arg2=>1},
+    status=>412,
 );
 
 $spec = {
@@ -37,20 +32,25 @@ $spec = {
         arg2 => ['str*' => {arg_pos=>1}],
     },
 };
-test_getargs(
+test_convertargs(
     name=>'arg1 only',
-    spec=>$spec, array=>[1],
-    status=>200, args=>{arg1=>1},
+    spec=>$spec, args=>{arg1=>1},
+    status=>200, array=>[1],
 );
-test_getargs(
+test_convertargs(
+    name=>'arg2 only',
+    spec=>$spec, args=>{arg2=>2},
+    status=>200, array=>[undef, 2],
+);
+test_convertargs(
     name=>'arg1 & arg2 (1)',
-    spec=>$spec, array=>[1, 2],
-    status=>200, args=>{arg1=>1, arg2=>2},
+    spec=>$spec, args=>{arg1=>1, arg2=>2},
+    status=>200, array=>[1,2],
 );
-test_getargs(
+test_convertargs(
     name=>'arg1 & arg2 (2)',
-    spec=>$spec, array=>[2, 1],
-    status=>200, args=>{arg1=>2, arg2=>1},
+    spec=>$spec, args=>{arg1=>2, arg2=>1},
+    status=>200, array=>[2, 1],
 );
 
 $spec = {
@@ -58,10 +58,15 @@ $spec = {
         arg1 => ['array*' => {of=>'str*', arg_pos=>0, arg_greedy=>1}],
     },
 };
-test_getargs(
-    name=>'arg_greedy (1)',
-    spec=>$spec, array=>[1, 2, 3],
-    status=>200, args=>{arg1=>[1, 2, 3]},
+test_convertargs(
+    name=>'arg_greedy (1a)',
+    spec=>$spec, args=>{arg1=>[1, 2, 3]},
+    status=>200, array=>[1, 2, 3],
+);
+test_convertargs(
+    name=>'arg_greedy (1b)',
+    spec=>$spec, args=>{arg1=>2},
+    status=>200, array=>[2],
 );
 
 $spec = {
@@ -70,42 +75,27 @@ $spec = {
         arg2 => ['array*' => {of=>'str*', arg_pos=>1, arg_greedy=>1}],
     },
 };
-test_getargs(
+test_convertargs(
     name=>'arg_greedy (2)',
-    spec=>$spec, array=>[1, 2, 3, 4],
-    status=>200, args=>{arg1=>1, arg2=>[2, 3, 4]},
-);
-
-$spec = {
-    args => {
-        arg1 => ['str*' => {arg_pos=>0}],
-        arg2 => ['str*' => {arg_pos=>1, arg_greedy=>1}],
-    },
-};
-test_getargs(
-    name=>'arg_greedy (3, string)',
-    spec=>$spec, array=>[1, 2, 3, 4],
-    status=>200, args=>{arg1=>1, arg2=>"2 3 4"},
+    spec=>$spec, args=>{arg1=>1, arg2=>[2, 3, 4]},
+    status=>200, array=>[1, 2, 3, 4],
 );
 
 DONE_TESTING:
 done_testing();
 
-sub test_getargs {
+sub test_convertargs {
     my (%args) = @_;
 
     subtest $args{name} => sub {
-        my %input_args = (array=>$args{array}, spec=>$args{spec});
-        for (qw/allow_extra_elems/) {
-            $input_args{$_} = $args{$_} if defined $args{$_};
-        }
-        my $res = get_args_from_array(%input_args);
+        my %input_args = (args=>$args{args}, spec=>$args{spec});
+        my $res = convert_args_to_array(%input_args);
 
         is($res->[0], $args{status}, "status=$args{status}")
             or diag explain $res;
 
-        if ($args{args}) {
-            is_deeply($res->[2], $args{args}, "result")
+        if ($args{array}) {
+            is_deeply($res->[2], $args{array}, "result")
                 or diag explain $res->[2];
         }
         #if ($args{post_test}) {

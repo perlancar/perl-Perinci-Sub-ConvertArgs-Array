@@ -90,7 +90,7 @@ __END__
 
  use Perinci::Sub::ConvertArgs::Array qw(convert_args_to_array);
 
- my $res = convert_args_to_array(args=>\%args, spec=>$spec, ...);
+ my $res = convert_args_to_array(args=>\%args, meta=>$meta, ...);
 
 
 =head1 DESCRIPTION

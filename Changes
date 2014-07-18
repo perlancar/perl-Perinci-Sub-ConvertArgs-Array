@@ -1,5 +1,10 @@
 Revision history for Perinci-Sub-ConvertArgs-Array
 
+0.06     2014-07-18 (SHARYANTO)
+
+         - Remove unused dependencies (Data::Sah, Log::Any).
+
+
 0.05     2014-07-18 (SHARYANTO)
 
          - No functional changes.

@@ -29,7 +29,7 @@ test_convertargs(
     status=>200, array=>[],
 );
 test_convertargs(
-    name=>'no spec -> error',
+    name=>'no meta -> error',
     meta=>$meta, args=>{arg2=>1},
     status=>412,
 );

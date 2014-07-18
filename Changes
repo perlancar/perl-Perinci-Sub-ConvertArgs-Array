@@ -1,6 +1,13 @@
 Revision history for Perinci-Sub-ConvertArgs-Array
 
-0.04	 2012-02-09 (SHARYANTO)
+0.05     2014-07-18 (SHARYANTO)
+
+         - No functional changes.
+
+         - Update example in Synopsis.
+
+
+0.04     2012-02-09 (SHARYANTO)
 
 	 - Rename dist from Sub-Spec-ConvertArgs-Array to
            Perinci-Sub-ConvertArgs-Array.

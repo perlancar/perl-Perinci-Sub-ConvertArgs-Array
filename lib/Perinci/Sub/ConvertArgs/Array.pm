@@ -1,23 +1,17 @@
 package Perinci::Sub::ConvertArgs::Array;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
-use Log::Any '$log';
-
-use Data::Sah;
 
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(convert_args_to_array);
 
-# VERSION
-
 our %SPEC;
-
-sub _parse_schema {
-    Data::Sah::normalize_schema(@_);
-}
 
 $SPEC{convert_args_to_array} = {
     v => 1.1,

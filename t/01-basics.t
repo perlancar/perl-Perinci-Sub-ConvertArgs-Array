@@ -3,7 +3,6 @@
 use 5.010;
 use strict;
 use warnings;
-use Log::Any '$log';
 use Test::More 0.98;
 
 use Perinci::Sub::ConvertArgs::Array qw(convert_args_to_array);

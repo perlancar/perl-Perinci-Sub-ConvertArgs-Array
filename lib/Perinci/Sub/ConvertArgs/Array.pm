@@ -77,8 +77,7 @@ sub convert_args_to_array {
 }
 
 1;
-#ABSTRACT: Convert hash arguments to array
-__END__
+#ABSTRACT:
 
 =head1 SYNOPSIS
 

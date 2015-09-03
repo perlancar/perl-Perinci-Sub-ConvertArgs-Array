@@ -92,9 +92,4 @@ This module provides convert_args_to_array() (and
 gencode_convert_args_to_array(), upcoming). This module is used by, among
 others, L<Perinci::Sub::Wrapper>.
 
-
-=head1 FUNCTIONS
-
-None are exported by default, but they are exportable.
-
 =cut

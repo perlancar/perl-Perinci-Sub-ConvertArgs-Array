@@ -57,6 +57,7 @@ sub convert_args_to_array {
     my @array;
 
     while (my ($k, $v) = each %$args) {
+        next if $k =~ /\A-/; # skip special arguments
         my $as = $args_prop->{$k};
         return [412, "Argument $k: Not specified in args property"] unless $as;
         my $pos = $as->{pos};

@@ -1,5 +1,10 @@
 Revision history for Perinci-Sub-ConvertArgs-Array
 
+0.08    2015-12-29 (PERLANCAR)
+
+	- [Bugfix] Skip special arguments.
+
+
 0.07    2015-09-03 (PERLANCAR)
 
 	- No functional changes.

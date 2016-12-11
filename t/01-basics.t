@@ -68,12 +68,12 @@ $meta = {
     },
 };
 test_convertargs(
-    name=>'arg_greedy (1a)',
+    name=>'arg_greedy (array, 1a)',
     meta=>$meta, args=>{arg1=>[1, 2, 3]},
     status=>200, array=>[1, 2, 3],
 );
 test_convertargs(
-    name=>'arg_greedy (1b)',
+    name=>'arg_greedy (array, 1b)',
     meta=>$meta, args=>{arg1=>2},
     status=>200, array=>[2],
 );
@@ -86,7 +86,7 @@ $meta = {
     },
 };
 test_convertargs(
-    name=>'arg_greedy (2)',
+    name=>'arg_greedy (array, 2)',
     meta=>$meta, args=>{arg1=>1, arg2=>[2, 3, 4]},
     status=>200, array=>[1, 2, 3, 4],
 );

@@ -18,7 +18,7 @@ $SPEC{convert_args_to_array} = {
     summary => 'Convert hash arguments to array',
     description => <<'_',
 
-Using information in 'args' property (particularly the 'pos' and 'greedy' of
+Using information in 'args' property (particularly the 'pos' and 'slurpy' of
 each argument spec), convert hash arguments to array.
 
 Example:
@@ -63,7 +63,7 @@ sub convert_args_to_array {
         my $pos = $as->{pos};
         return [412, "Argument $k: No pos specified in arg spec"]
             unless defined $pos;
-        if ($as->{greedy}) {
+        if ($as->{slurpy} // $as->{greedy}) {
             $v = [$v] if ref($v) ne 'ARRAY';
             # splice can't work if $pos is beyond array's length
             for (@array .. $pos-1) {
